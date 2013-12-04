@@ -1,5 +1,6 @@
 package mutant5000
 
+
 /*
   +1>>  This source code is licensed as GPLv3 if not stated otherwise.
     >>  NO responsibility taken for ANY harm, damage done
@@ -22,27 +23,28 @@ package mutant5000
     >>  Made in Bavaria by fat little elves - since 1983.
  */
 
-abstract class Encoding[T <: Encoding[_]] extends Genetic[T]{
+abstract class Encoding extends Genetic[Encoding]{
 }
 
-class BitEncoding(protected val v: BigInt , op: BitOp, length: Int) extends Encoding[BitEncoding] {
-
-  def |+|(that: BitEncoding): BitEncoding = {
-  new BitEncoding(op(this.v, that.v), op, length)
+case class BrokenEncoding[T](v: T) extends Encoding {
+  def |+|(that: Encoding): Encoding = that
+  def mutate(prob: Double): Encoding = this
 }
 
-  def mutate(prob: Double): BitEncoding = {
-    val probability = prob / length
+case class BitEncoding(protected[mutant5000] val v: BigInt ,
+                  protected[mutant5000] val op: BitOp,
+                  protected[mutant5000] val length: Int,
+                  mutation: EncodingMutation = BitEncodingMutation) extends Encoding {
 
-    var currentValue = this.v
+  def |+|(that: Encoding): Encoding = {
+  that match {
+    case x:BitEncoding => BitEncoding(op(this.v, x.v), op, length)
+    case _ => that
+  }
+}
 
-    (0 to length-1).foreach { x =>
-      if (Probability.coin(probability)) {
-        currentValue = currentValue.flipBit(x)
-      }
-    }
-
-    new BitEncoding(currentValue, op, this.length)
+  def mutate(prob: Double): Encoding = {
+    mutation(this, prob)
   }
 }
 

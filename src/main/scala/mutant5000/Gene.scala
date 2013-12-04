@@ -1,7 +1,7 @@
 package mutant5000
 
 import scala._
-import mutant5000.Gene
+
 
 /*
   +1>>  This source code is licensed as GPLv3 if not stated otherwise.
@@ -25,27 +25,30 @@ import mutant5000.Gene
     >>  Made in Bavaria by fat little elves - since 1983.
  */
 
-case class Gene[T <: Encoding[T]](typename: String, seq: Seq[T]) extends Genetic[Gene[T]] with Assessable[Gene[T]] {
+case class Gene(typename: String, seq: Seq[Encoding])
+  extends Genetic[Gene] with Assessable[Gene] {
 
   def sequence = seq
 
-  def |+|(that: Gene[T]): Gene[T] = {
+  def |+|(that: Gene): Gene = {
     val s1 = this.sequence
     val s2 = that.sequence
 
     val s1s2 = s1.zip(s2)
 
-    val scombination = s1s2.map( x => x._1.|+|(x._2))
+    val scombination = s1s2.map({ x =>
+      x._1|+|(x._2)
+    })
 
     Gene(typename, scombination)
   }
 
-  def mutate(prob: Double): Gene[T] = {
-    val probability = prob/seq.length
+  def mutate(prob: Double): Gene = {
+    val probability = prob/this.sequence.length
 
     val smuta = this.sequence.map(x => x.mutate(probability))
 
-    Gene(typename, smuta)
+    Gene(this.typename, smuta)
   }
 }
 

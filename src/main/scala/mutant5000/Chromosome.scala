@@ -21,7 +21,9 @@ package mutant5000
     >>  Made in Bavaria by fat little elves - since 1983.
  */
 
-class Chromosome(protected val genes : Seq[Gene[_]] = Seq.empty, val name:String ="PierreGabrielle")
+class Chromosome(protected[mutant5000] val genes : Seq[Gene] = Seq.empty,
+                 val name:String ="PierreGabrielle",
+                 val mutation : ChromosomeMutation = SimpleChromosomeMutation)
   extends Genetic[Chromosome] with Assessable[Chromosome] {
 
   def |+|(that: Chromosome): Chromosome = {
@@ -36,10 +38,7 @@ class Chromosome(protected val genes : Seq[Gene[_]] = Seq.empty, val name:String
   }
 
   def mutate(prob: Double): Chromosome = {
-    val probability = prob / genes.length
-    val smuta = genes.map(x => x.mutate(probability))
-
-    new Chromosome(smuta)
+      mutation(this, prob)
   }
 }
 
