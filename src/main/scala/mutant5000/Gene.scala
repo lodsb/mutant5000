@@ -25,8 +25,10 @@ import scala._
     >>  Made in Bavaria by fat little elves - since 1983.
  */
 
-case class Gene(typename: String, seq: Seq[Encoding])
-  extends Genetic[Gene] with Assessable[Gene] {
+// create random -> encoding
+
+class Gene(typename: String, seq: Seq[Encoding])
+  extends Genetic[Gene] with Assessable {
 
   def sequence = seq
 
@@ -40,7 +42,7 @@ case class Gene(typename: String, seq: Seq[Encoding])
       x._1|+|(x._2)
     })
 
-    Gene(typename, scombination)
+    new Gene(typename, scombination)
   }
 
   def mutate(prob: Double): Gene = {
@@ -48,7 +50,7 @@ case class Gene(typename: String, seq: Seq[Encoding])
 
     val smuta = this.sequence.map(x => x.mutate(probability))
 
-    Gene(this.typename, smuta)
+    new Gene(this.typename, smuta)
   }
 }
 

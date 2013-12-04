@@ -24,7 +24,7 @@ package mutant5000
 class Chromosome(protected[mutant5000] val genes : Seq[Gene] = Seq.empty,
                  val name:String ="PierreGabrielle",
                  val mutation : ChromosomeMutation = SimpleChromosomeMutation)
-  extends Genetic[Chromosome] with Assessable[Chromosome] {
+  extends Genetic[Chromosome] with Assessable {
 
   def |+|(that: Chromosome): Chromosome = {
     val s1 = genes

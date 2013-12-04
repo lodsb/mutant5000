@@ -22,12 +22,4 @@ package mutant5000
     >>  Made in Bavaria by fat little elves - since 1983.
  */
 
-trait Assessable[T] {
-  def fitness(f: Fitnessfunction[T]) : Double = {
-    f.assess(this)
-  }
-}
-
-trait Fitnessfunction[T] {
-  def assess(a: Assessable[T]) : Double
-}
+trait Assessable {}

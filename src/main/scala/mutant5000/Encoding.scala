@@ -48,3 +48,14 @@ case class BitEncoding(protected[mutant5000] val v: BigInt ,
   }
 }
 
+// dann einem Gene übergeben
+abstract class EncodingCreator {
+  def create // parameters???
+}
+
+object Encoding {
+  object BitEncoding extends EncodingCreator {
+    def create {}
+  }
+}
+
