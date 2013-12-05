@@ -6,9 +6,9 @@ simple library for GAs:
 * supports several fitness functions for each (sub-)gene and chromosome
 * mutation and combination can be altered per gene and encoding
 
-import mutant5000._
-
 ```scala
+
+import mutant5000._
 
 object Test extends App {
 
@@ -17,8 +17,8 @@ object Test extends App {
 
   val stringGeneName = "StringGene"
   val intSeqGeneName = "IntSeqGene"
-  // create population
 
+  // create population
   val populationSequence = Seq.fill[Chromosome](1000) {
     // random characterstrings
     val stringGene = GeneBuilder(objectiveString.length-1, stringGeneName,
