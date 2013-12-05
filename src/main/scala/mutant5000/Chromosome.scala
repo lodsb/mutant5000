@@ -27,6 +27,7 @@ class Chromosome(protected[mutant5000] val genes : Seq[Gene] = Seq.empty,
   extends Genetic[Chromosome] with Assessable {
 
   def |+|(that: Chromosome): Chromosome = {
+    //TODO: use typenames of genes to match?
     val s1 = genes
     val s2 = that.genes
 
@@ -39,6 +40,10 @@ class Chromosome(protected[mutant5000] val genes : Seq[Gene] = Seq.empty,
 
   def mutate(prob: Double): Chromosome = {
       mutation(this, prob)
+  }
+
+  override def toString() : String = {
+    "Chromosome(\n"+genes.map( gene => "\t"++gene.toString++"\n")++"\n)"
   }
 }
 

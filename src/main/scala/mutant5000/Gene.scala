@@ -27,30 +27,28 @@ import scala._
 
 // create random -> encoding
 
-class Gene(typename: String, seq: Seq[Encoding])
+case class Gene(val typename: String, encodings: Seq[Encoding],
+            mutation: GeneMutation = SimpleGeneMutation,
+            combination: GeneCombination = WholeGeneCombination)
   extends Genetic[Gene] with Assessable {
 
-  def sequence = seq
+  def sequence = encodings
 
   def |+|(that: Gene): Gene = {
-    val s1 = this.sequence
-    val s2 = that.sequence
-
-    val s1s2 = s1.zip(s2)
-
-    val scombination = s1s2.map({ x =>
-      x._1|+|(x._2)
-    })
-
-    new Gene(typename, scombination)
+    combination.combine(this, that)
   }
 
   def mutate(prob: Double): Gene = {
-    val probability = prob/this.sequence.length
+    mutation(this,prob)
+  }
+}
 
-    val smuta = this.sequence.map(x => x.mutate(probability))
+object GeneBuilder {
+  def apply(num: Int, name: String, mutation: GeneMutation = SimpleGeneMutation,
+             combination: GeneCombination = WholeGeneCombination)(func: => Encoding) : Gene = {
+    val s = (0 to num).map( x => func)
 
-    new Gene(this.typename, smuta)
+    Gene(name, s, mutation, combination)
   }
 }
 

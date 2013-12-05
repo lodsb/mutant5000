@@ -1,5 +1,7 @@
 package mutant5000
 
+import util.Random
+
 
 /*
   +1>>  This source code is licensed as GPLv3 if not stated otherwise.
@@ -24,11 +26,14 @@ package mutant5000
  */
 
 abstract class Encoding extends Genetic[Encoding]{
+  def toInt: Int
 }
 
 case class BrokenEncoding[T](v: T) extends Encoding {
   def |+|(that: Encoding): Encoding = that
   def mutate(prob: Double): Encoding = this
+
+  def toInt = Integer.MAX_VALUE // argh
 }
 
 case class BitEncoding(protected[mutant5000] val v: BigInt ,
@@ -46,16 +51,41 @@ case class BitEncoding(protected[mutant5000] val v: BigInt ,
   def mutate(prob: Double): Encoding = {
     mutation(this, prob)
   }
+
+  def toInt: Int = v.toInt
 }
 
-// dann einem Gene übergeben
-abstract class EncodingCreator {
-  def create // parameters???
+case class CharacterEncoding(protected[mutant5000] val v: Char, mutation: EncodingMutation = CharacterEncodingMutation)
+  extends Encoding {
+  def |+|(that: Encoding): Encoding = this
+
+  def mutate(prob: Double): Encoding = {
+    mutation(this, prob)
+  }
+
+  def toInt: Int = v.toInt
 }
 
 object Encoding {
-  object BitEncoding extends EncodingCreator {
-    def create {}
+  private val r = Random
+
+  object BitEncoding {
+    // randomize bitop as well?
+    def random(length: Int, op: BitOp ,  mutation: EncodingMutation = BitEncodingMutation) : BitEncoding = {
+      val max = scala.math.pow(2, length).toLong
+      val v = r.nextLong() % max
+
+      new BitEncoding(BigInt(v), op , length, mutation)
+    }
   }
+
+  object CharacterEncoding {
+    def random : CharacterEncoding =  {
+      val v = (r.nextInt(90) + 32).toChar
+
+      new CharacterEncoding(v)
+    }
+  }
+
 }
 

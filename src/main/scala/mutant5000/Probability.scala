@@ -25,7 +25,7 @@ object Probability {
   private val random = new scala.util.Random()
 
   def coin(probability: Double) : Boolean = {
-    random.nextDouble() >= probability
+    random.nextDouble() <= probability
   }
 }
 

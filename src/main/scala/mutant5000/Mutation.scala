@@ -25,7 +25,7 @@ abstract class Mutation[T] extends ((T, Double) => T)
 
 abstract class ChromosomeMutation extends Mutation[Chromosome]
 
-abstract class GeneMutation[T] extends Mutation[Gene]
+abstract class GeneMutation extends Mutation[Gene]
 
 abstract class EncodingMutation extends Mutation[Encoding]
 
@@ -45,7 +45,39 @@ object BitEncodingMutation extends EncodingMutation {
           }
         }
 
-        BitEncoding(currentValue, v1.op, v1.length)
+        v1.copy(v = currentValue)
+      }
+
+      case _ => that
+    }
+  }
+}
+
+object CharacterEncodingMutation extends EncodingMutation {
+  private val r = scala.util.Random
+  def apply(that: Encoding, prob: Double): Encoding = {
+
+    that match {
+      case v1: CharacterEncoding => {
+        /*val probability = prob / 16
+
+        var currentValue = BigInt(v1.v)
+
+        (0 to 16).foreach { x =>
+          if (Probability.coin(probability)) {
+            currentValue = currentValue.flipBit(x)
+          }
+        }
+
+        val charValue = currentValue.toChar*/
+
+        val charValue = if(r.nextDouble() > prob) {
+          v1.v
+        } else {
+          (r.nextInt(90) + 32).toChar
+        }
+
+        v1.copy(v=charValue)
       }
 
       case _ => that
@@ -59,7 +91,7 @@ object SimpleGeneMutation extends GeneMutation {
 
     val smuta = v1.sequence.map(x => x.mutate(probability))
 
-    Gene(v1.typename, smuta)
+    v1.copy(encodings = smuta)
   }
 }
 
