@@ -111,15 +111,12 @@ object EqualityGeneScore {
         var intList = List[Int]()
 
         a.sequence.foreach { enc =>
-          enc match {
-            case x: Encoding => {
-              intList = intList :+ x.toInt
-            }
-          }
+              intList = intList :+ enc.toInt
         }
 
         // not really exact...
-        (intList.zip(seq).count {case(x,y) => x.toString != y.toString}) / seq.length
+        val distance = (intList.zip(seq).count {case(x,y) => x.toString != y.toString}).toDouble / seq.length.toDouble
+        distance
       }
     }
   }

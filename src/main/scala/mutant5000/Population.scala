@@ -56,19 +56,19 @@ class Population(initialPopulation : Seq[Chromosome], private val scoreFunc: Sco
     if (population.size > 2) {
       val elitismCount = (population.size*elitism).toInt
 
-      val plebs = population// population.slice(elitismCount, population.size-1)
+      val plebs = population.slice(elitismCount, population.size-1)
 
       if (plebs.size > 2) {
         var mates = Seq[(Chromosome, Chromosome)]()
 
         // create a mating population
         plebs.foreach({ x =>
-          //if (random.nextDouble() <= crossOverProbability) {
+          if (random.nextDouble() <= crossOverProbability) {
             val v1 = monteCarlo(plebs)
             val v2 = monteCarlo(plebs)
 
             mates = mates :+ (v1, v2)
-          //}
+          }
         })
 
         ret = Some(mates)
@@ -104,8 +104,8 @@ class Population(initialPopulation : Seq[Chromosome], private val scoreFunc: Sco
     }
   }
 
-  def bestScore = best.map(x => Some(x._1))
-  def bestSpecimen = best.map(x => Some(x._2))
+  def bestScore = best.map(x => x._1)
+  def bestSpecimen = best.map(x => x._2)
 
   override def toString(): String = {
     "**** Population ****\n" + population.map(x => "Score: "+x._1+"\n"+x._2.toString())

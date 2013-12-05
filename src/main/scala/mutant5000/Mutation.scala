@@ -45,7 +45,7 @@ object BitEncodingMutation extends EncodingMutation {
           }
         }
 
-        v1.copy(v = currentValue)
+        v1.copy(v = scala.math.abs(currentValue.toInt))
       }
 
       case _ => that

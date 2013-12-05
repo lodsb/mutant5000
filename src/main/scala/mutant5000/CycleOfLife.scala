@@ -27,32 +27,39 @@ class CycleOfLife(population: Population,
                   crossOverProbability: Double,
                   mutationProbability: Double) {
 
-  def evolve(num: Int, keepBest: Int=200, prettyPrint: Boolean = true) = {
-    (0 to num).foreach {
-      x =>
-        val mates = population.mates(crossOverProbability, elitism)
+  def evolve(num: Int, keepBest: Int = 200, prettyPrint: Boolean = true, earlyStop: Boolean = true) = {
+    var generation = 0
+    var done = false
+    while (generation <= num && (!(done && earlyStop))) {
+      val mates = population.mates(crossOverProbability, elitism)
 
-        if (mates.isDefined) {
-          var offspring = mates.get.map {
-            couple =>
-              couple._1 |+| couple._2
-          }
+      if (mates.isDefined) {
+        var offspring = mates.get.map {
+          couple =>
+            couple._1 |+| couple._2
+        }
 
-          println(offspring.size)
-
-          if (mutationProbability > 0) {
-            offspring = offspring.map { o =>
-                o.mutate(mutationProbability)
-            }
-          }
-
-          population.add(offspring)
-          population.keepBest(keepBest)
-
-          if(prettyPrint) {
-           println("****\nCycle: "+x+"\nPopulation Size: "+population.size+"\nBest: "+population.best+"\n")
+        if (mutationProbability > 0) {
+          offspring = offspring.map {
+            o =>
+              o.mutate(mutationProbability)
           }
         }
+
+        population.add(offspring)
+        population.keepBest(keepBest)
+
+        if (prettyPrint) {
+          println("****\nCycle: " + generation + "\nPopulation Size: " + population.size + "\nBest: " + population.best + "\n")
+        }
+
+        if (population.bestScore.get == 0.0) {
+          done = true
+        }
+
+      }
+
+      generation = generation + 1
     }
   }
 }

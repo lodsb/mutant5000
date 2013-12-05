@@ -31,17 +31,17 @@ object Test extends App {
   val intSeqGeneName = "IntSeqGene"
   // create population
 
-  val populationSequence = Seq.fill[Chromosome](100) {
+  val populationSequence = Seq.fill[Chromosome](1000) {
     // random characterstrings
-    val stringGene = GeneBuilder(objectiveString.length, stringGeneName,
+    val stringGene = GeneBuilder(objectiveString.length-1, stringGeneName,
                       SimpleGeneMutation, ConcatenatingGeneCombination){
                         Encoding.CharacterEncoding.random
                     }
 
     // random bitstrings with length 4
-    val intGene = GeneBuilder(objectiveInts.length, intSeqGeneName,
+    val intGene = GeneBuilder(objectiveInts.length-1, intSeqGeneName,
                        SimpleGeneMutation, WholeGeneCombination){
-                          Encoding.BitEncoding.random(4, Xor)
+                          Encoding.BitEncoding.random(4, Or)
                     }
 
     new Chromosome(Seq(stringGene,intGene))
@@ -50,10 +50,10 @@ object Test extends App {
   // create the score functions (inverse fitness)
   val geneScorefs = new GeneScoreFunctions
   geneScorefs.set(
-    Map(
-      stringGeneName -> LevensteinGeneScore(objectiveString),
-      intSeqGeneName -> EqualityGeneScore(objectiveInts)
-    )
+                  Map(
+                    stringGeneName -> LevensteinGeneScore(objectiveString),
+                    intSeqGeneName -> EqualityGeneScore(objectiveInts)
+                  )
   )
 
   val chromosomeScore = new SimpleChromosomeScore(geneScorefs)
@@ -61,11 +61,16 @@ object Test extends App {
   val initialPopulation = new Population(populationSequence, chromosomeScore)
 
   val cycleOfLife = new CycleOfLife(initialPopulation,
-                                    elitism=0.1,
-                                    crossOverProbability = 0.8,
-                                    mutationProbability = 0.9)
+                                    elitism=0.001,
+                                    crossOverProbability = 0.99,
+                                    mutationProbability = 0.8)
 
-  cycleOfLife.evolve(10000, prettyPrint = true)
+  // keepBest reduces the population after each generation
+  // earlyStop stops the evolution once a score of 0.0 (best) has been
+  // reached
+  cycleOfLife.evolve(1000, keepBest = 100,
+                           prettyPrint = true,
+                           earlyStop = true)
 
   println(initialPopulation.best)
 }
