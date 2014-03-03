@@ -35,7 +35,7 @@ class Chromosome(val genes : Seq[Gene] = Seq.empty,
 
     val scombination = s1s2.map( x => x._1.|+|(x._2))
 
-    new Chromosome(scombination)
+    new Chromosome(scombination, mutation = this.mutation)
   }
 
   def mutate(prob: Double): Chromosome = {
