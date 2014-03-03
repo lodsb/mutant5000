@@ -31,7 +31,7 @@ abstract class EncodingMutation extends Mutation[Encoding]
 
 
 object BitEncodingMutation extends EncodingMutation {
-  def apply(that: Encoding, prob: Double): Encoding = {
+  override def apply(that: Encoding, prob: Double): Encoding = {
 
     that match {
       case v1: BitEncoding => {
@@ -55,7 +55,7 @@ object BitEncodingMutation extends EncodingMutation {
 
 class IntegerEncodingMutation(min: Int, max: Int, mutationDeviation: Int) extends EncodingMutation {
   private val r = scala.util.Random
-  def apply(that: Encoding, prob: Double): Encoding = {
+  override def apply(that: Encoding, prob: Double): Encoding = {
 
     that match {
       case v1: IntegerEncoding => {
@@ -83,7 +83,7 @@ class IntegerEncodingMutation(min: Int, max: Int, mutationDeviation: Int) extend
 
 object CharacterEncodingMutation extends EncodingMutation {
   private val r = scala.util.Random
-  def apply(that: Encoding, prob: Double): Encoding = {
+  override def apply(that: Encoding, prob: Double): Encoding = {
 
     that match {
       case v1: CharacterEncoding => {
@@ -103,7 +103,7 @@ object CharacterEncodingMutation extends EncodingMutation {
 }
 
 object SimpleGeneMutation extends GeneMutation {
-  def apply(v1: Gene, v2: Double): Gene = {
+  override def apply(v1: Gene, v2: Double): Gene = {
     val probability = v2/v1.sequence.length
 
     val smuta = v1.sequence.map(x => x.mutate(probability))
@@ -113,7 +113,7 @@ object SimpleGeneMutation extends GeneMutation {
 }
 
 object SimpleChromosomeMutation extends ChromosomeMutation {
-  def apply(v1: Chromosome, prob: Double): Chromosome = {
+  override def apply(v1: Chromosome, prob: Double): Chromosome = {
 
     val probability = prob / v1.genes.length
     val smuta = v1.genes.map(x => x.mutate(probability))
