@@ -25,7 +25,7 @@ import mutant5000._
 object Test extends App {
 
   val objectiveString = "Hello, World..."
-  val objectiveInts = Seq(1,2,11,14)
+  val objectiveInts = Seq(1,2,11,14,0,3,4,2,2,2)
 
   val stringGeneName = "StringGene"
   val intSeqGeneName = "IntSeqGene"
@@ -58,17 +58,17 @@ object Test extends App {
 
   val chromosomeScore = new SimpleChromosomeScore(geneScorefs)
 
-  val initialPopulation = new Population(populationSequence, chromosomeScore)
+  val initialPopulation = new Population(populationSequence, Some(chromosomeScore))
 
   val cycleOfLife = new CycleOfLife(initialPopulation,
                                     elitism=0.001,
                                     crossOverProbability = 0.99,
-                                    mutationProbability = 0.8)
+                                    mutationProbability = 0.9)
 
   // keepBest reduces the population after each generation
   // earlyStop stops the evolution once a score of 0.0 (best) has been
   // reached
-  cycleOfLife.evolve(1000, keepBest = 100,
+  cycleOfLife.evolve(10000, keepBest = 100,
                            prettyPrint = true,
                            earlyStop = true)
 

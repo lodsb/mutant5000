@@ -66,6 +66,17 @@ case class CharacterEncoding(protected[mutant5000] val v: Char, mutation: Encodi
   def toInt: Int = v.toInt
 }
 
+case class IntegerEncoding(protected[mutant5000] val v: Int, mutation: EncodingMutation)
+  extends Encoding {
+  def |+|(that: Encoding): Encoding = this
+
+  def mutate(prob: Double): Encoding = {
+    mutation(this, prob)
+  }
+
+  def toInt: Int = v.toInt
+}
+
 object Encoding {
   private val r = Random
 
@@ -84,6 +95,12 @@ object Encoding {
       val v = (r.nextInt(90) + 32).toChar
 
       new CharacterEncoding(v)
+    }
+  }
+
+  object IntegerEncoding {
+    def init(value: Int, mutation : EncodingMutation) : IntegerEncoding = {
+      new IntegerEncoding(value, mutation);
     }
   }
 

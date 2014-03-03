@@ -21,7 +21,7 @@ package mutant5000
     >>  Made in Bavaria by fat little elves - since 1983.
  */
 
-class Chromosome(protected[mutant5000] val genes : Seq[Gene] = Seq.empty,
+class Chromosome(val genes : Seq[Gene] = Seq.empty,
                  val name:String ="PierreGabrielle",
                  val mutation : ChromosomeMutation = SimpleChromosomeMutation)
   extends Genetic[Chromosome] with Assessable {

@@ -53,23 +53,40 @@ object BitEncodingMutation extends EncodingMutation {
   }
 }
 
+class IntegerEncodingMutation(min: Int, max: Int, mutationDeviation: Int) extends EncodingMutation {
+  private val r = scala.util.Random
+  def apply(that: Encoding, prob: Double): Encoding = {
+
+    that match {
+      case v1: IntegerEncoding => {
+
+        val intValue: Int = if(r.nextDouble() > prob) {
+          v1.v
+        } else {
+          val curDeviation = r.nextInt(mutationDeviation)
+          val res = if(r.nextBoolean()) {
+            v1.v + curDeviation
+          } else {
+            v1.v - curDeviation
+          }
+
+          scala.math.min(max, scala.math.max(min, res))
+        }
+
+        v1.copy(v=intValue)
+      }
+
+      case _ => that
+    }
+  }
+}
+
 object CharacterEncodingMutation extends EncodingMutation {
   private val r = scala.util.Random
   def apply(that: Encoding, prob: Double): Encoding = {
 
     that match {
       case v1: CharacterEncoding => {
-        /*val probability = prob / 16
-
-        var currentValue = BigInt(v1.v)
-
-        (0 to 16).foreach { x =>
-          if (Probability.coin(probability)) {
-            currentValue = currentValue.flipBit(x)
-          }
-        }
-
-        val charValue = currentValue.toChar*/
 
         val charValue = if(r.nextDouble() > prob) {
           v1.v

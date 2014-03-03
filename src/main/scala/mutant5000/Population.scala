@@ -24,7 +24,7 @@ package mutant5000
 
 import scala.math._
 
-class Population(initialPopulation : Seq[Chromosome], private val scoreFunc: ScoreFunction[Chromosome]) {
+class Population(initialPopulation : Seq[Chromosome], private val scoreFunc: Option[ScoreFunction[Chromosome]]) {
   private var population = List[(Double, Chromosome)]()
   private var random = scala.util.Random
 
@@ -33,16 +33,31 @@ class Population(initialPopulation : Seq[Chromosome], private val scoreFunc: Sco
   initialPopulation.foreach {x => this.add(x)}
 
   def add(c: Chromosome) = {
-    population = population :+ (scoreFunc.assess(c),c)
+    if(scoreFunc.isDefined) {
+      population = population :+ (scoreFunc.get.assess(c),c)
+      population = population.sortBy(x => x._1)
+    } else {
+      new Exception("Missing Score function!")
+    }
+  }
+
+  def add(c: Chromosome, score: Double) = {
+    population = population :+ (score,c)
     population = population.sortBy(x => x._1)
   }
 
   def add(seq: Seq[Chromosome]) = {
+    if(scoreFunc.isDefined) {
     seq.foreach({ c =>
-      population = population :+ (scoreFunc.assess(c),c)
+      population = population :+ (scoreFunc.get.assess(c),c)
     })
 
     population = population.sortBy(x => x._1)
+    } else {
+      new Exception("Missing Score function!")
+    }
+
+
   }
 
   def keepBest(num: Int) = {
