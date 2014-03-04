@@ -45,5 +45,9 @@ class Chromosome(val genes : Seq[Gene] = Seq.empty,
   override def toString() : String = {
     "Chromosome(\n"+genes.map( gene => "\t"++gene.toString++"\n")++"\n)"
   }
+
+  def chckString : String = {
+    genes.foldLeft("")((x,y)=> x+y.encodings.foldLeft("")((f1,f2) => f1+f2.toInt))
+  }
 }
 
