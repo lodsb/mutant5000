@@ -131,4 +131,8 @@ class Population(initialPopulation : Seq[Chromosome], private val scoreFunc: Opt
   override def toString(): String = {
     "**** Population ****\n" + population.map(x => "Score: "+x._1+"\n"+x._2.toString())
   }
+
+  def printChromosomeChck = {
+    population.foreach(x => println("Score: "+x._1+" -> chromsome: "+x._2.chckString))
+  }
 }
