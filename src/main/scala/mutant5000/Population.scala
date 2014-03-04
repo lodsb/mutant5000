@@ -66,6 +66,12 @@ class Population(initialPopulation : Seq[Chromosome], private val scoreFunc: Opt
     }
   }
 
+  def degradePopulationScoresBy(subtract: Double) = {
+    population = population.map({ x =>
+      (x._1-subtract, x._2)
+    })
+  }
+
   def mates(crossOverProbability: Double, elitism: Double) : Option[Seq[(Chromosome, Chromosome)]] = {
     var ret : Option[Seq[(Chromosome, Chromosome)]] = None
     if (population.size > 2) {
