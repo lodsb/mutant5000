@@ -66,9 +66,9 @@ class Population(initialPopulation : Seq[Chromosome], private val scoreFunc: Opt
     }
   }
 
-  def degradePopulationScoresBy(subtract: Double) = {
+  def degradePopulationScoresBy(add: Double) = {
     population = population.map({ x =>
-      (x._1-subtract, x._2)
+      (x._1+add, x._2)
     })
   }
 
